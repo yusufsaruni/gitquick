@@ -9,7 +9,7 @@ A small **zsh helper script** to speed up common git operations:
 
 ```bash
 ## Clone the repo
-git clone https://github.com/yourusername/gitquick.git
+git clone https://github.com/yusufsaruni/gitquick.git
 cd gitquick
 
 ## Make the script executable
