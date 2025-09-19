@@ -15,10 +15,24 @@ fi
 COMMIT_MSG=$1
 shift 1  # remove commit message
 
-# Check if inside a git repo
+# Check if inside a git repo, offer to initialize if not
 if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  echo "❌ Not inside a Git repository."
-  exit 1
+  echo "⚠️  Not inside a Git repository."
+  read "ANSWER?Do you want to initialize a new git repository here? (y/N): "
+  if [[ "$ANSWER" =~ ^[Yy]$ ]]; then
+    git init
+    echo "✅ Initialized new git repository."
+  else
+    echo "🚫 Aborted. No repository was initialized."
+    exit 1
+  fi
+fi
+
+
+
+if ! git rev-parse --quiet --verify HEAD >/dev/null 2>&1; then
+  git commit --allow-empty -m "Initial commit (auto)"
+  echo "✅ Created initial empty commit to initialize HEAD"
 fi
 
 # Determine branch
@@ -49,7 +63,11 @@ fi
 git commit -m "$COMMIT_MSG"
 echo "✅ Commit created: $COMMIT_MSG"
 
-# Push
-git push origin "$BRANCH"
+if [ $HAS_COMMITS -ne 0 ]; then
+  git push -u origin "$BRANCH"
+else
+  git push origin "$BRANCH"
+fi
+
 echo "🚀 Changes pushed to branch: $BRANCH"
 
