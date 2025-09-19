@@ -59,6 +59,7 @@ else
   done
 fi
 
+HAS_COMMITS=$(git rev-parse --quiet --verify HEAD >/dev/null 2>&1; echo $?)
 # Commit
 git commit -m "$COMMIT_MSG"
 echo "✅ Commit created: $COMMIT_MSG"
